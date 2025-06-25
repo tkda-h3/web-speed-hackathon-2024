@@ -18,18 +18,18 @@ export default defineConfig(async (): Promise<Options[]> => {
         API_URL: process.env['KOYEB_PUBLIC_DOMAIN']
           ? `https://${process.env['KOYEB_PUBLIC_DOMAIN']}`
           : 'http://localhost:8000',
-        NODE_ENV: process.env['NODE_ENV'] || 'development',
+        NODE_ENV: process.env['NODE_ENV'] || 'production',
       },
       format: 'cjs',
       metafile: true,
-      minify: false,
+      minify: true,
       noExternal: [/@wsh-2024\/.*/],
       outDir: OUTPUT_DIR,
-      shims: true,
-      sourcemap: true,
-      splitting: false,
+      shims: false,
+      sourcemap: false,
+      splitting: true,
       target: 'node18',
-      treeshake: false,
+      treeshake: true,
     },
   ];
 });

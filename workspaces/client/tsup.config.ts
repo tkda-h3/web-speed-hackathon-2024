@@ -26,7 +26,7 @@ export default defineConfig(async (): Promise<Options[]> => {
       },
       env: {
         API_URL: '',
-        NODE_ENV: process.env['NODE_ENV'] || 'development',
+        NODE_ENV: process.env['NODE_ENV'] || 'production',
         PATH_LIST: IMAGE_PATH_LIST.join(',') || '',
       },
       esbuildOptions(options) {
@@ -54,13 +54,13 @@ export default defineConfig(async (): Promise<Options[]> => {
         '.wasm': 'binary',
       },
       metafile: true,
-      minify: false,
+      minify: true,
       outDir: OUTPUT_DIR,
       platform: 'browser',
       shims: true,
-      sourcemap: 'inline',
+      sourcemap: false,
       splitting: false,
-      target: ['chrome58', 'firefox57', 'safari11', 'edge18'],
+      target: ['chrome58'],
       treeshake: false,
     },
   ];
