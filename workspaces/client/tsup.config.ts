@@ -25,6 +25,11 @@ export default defineConfig(async (): Promise<Options[]> => {
         client: path.resolve(PACKAGE_DIR, './src/index.tsx'),
         serviceworker: path.resolve(PACKAGE_DIR, './src/serviceworker/index.ts'),
       },
+      outExtension() {
+        return {
+          js: `.global.js`,
+        };
+      },
       env: {
         API_URL: '',
         NODE_ENV: process.env['NODE_ENV'] || 'production',
@@ -63,7 +68,7 @@ export default defineConfig(async (): Promise<Options[]> => {
       sourcemap: false,
       splitting: false,
       target: ['chrome58'],
-      treeshake: false,
+      treeshake: true,
     },
   ];
 });
