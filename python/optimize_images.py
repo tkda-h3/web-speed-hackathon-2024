@@ -13,8 +13,12 @@ import click
 from PIL import Image
 from tqdm import tqdm
 
-# Enable AVIF support
-import pillow_avif_plugin
+# Enable AVIF support if available
+try:
+    import pillow_avif_plugin
+    AVIF_SUPPORT = True
+except ImportError:
+    AVIF_SUPPORT = False
 
 # Project root directory
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -78,9 +82,12 @@ def optimize_image(
                 results.append((output_path, output_path.stat().st_size))
             
             elif fmt == 'avif':
-                output_path = file_output_dir / f"{base_name}.avif"
-                img.save(output_path, 'AVIF', quality=quality)
-                results.append((output_path, output_path.stat().st_size))
+                if AVIF_SUPPORT:
+                    output_path = file_output_dir / f"{base_name}.avif"
+                    img.save(output_path, 'AVIF', quality=quality)
+                    results.append((output_path, output_path.stat().st_size))
+                else:
+                    click.echo(f"AVIF support not available, skipping {base_name}", err=True)
             
             elif fmt == 'original':
                 # Save optimized version in original format

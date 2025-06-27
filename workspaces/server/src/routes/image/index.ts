@@ -112,7 +112,23 @@ app.get(
 
     const { ext: reqImgExt, name: reqImgId } = path.parse(c.req.valid('param').imageFile);
 
-    const resImgFormat = c.req.valid('query').format ?? reqImgExt.slice(1);
+    // Check if browser accepts WebP format
+    const acceptHeader = c.req.header('Accept') || '';
+    const acceptsWebP = acceptHeader.includes('image/webp');
+    
+    let resImgFormat = c.req.valid('query').format ?? reqImgExt.slice(1);
+    
+    // If no explicit format requested and browser accepts WebP, check if WebP version exists
+    if (!c.req.valid('query').format && acceptsWebP && resImgFormat !== 'webp') {
+      const webpPath = path.resolve(IMAGES_PATH, `${reqImgId}.webp`);
+      try {
+        await fs.access(webpPath);
+        // WebP file exists, use it
+        resImgFormat = 'webp';
+      } catch {
+        // WebP file doesn't exist, use original format
+      }
+    }
 
     if (!isSupportedImageFormat(resImgFormat)) {
       throw new HTTPException(501, { message: `Image format: ${resImgFormat} is not supported.` });
@@ -129,6 +145,14 @@ app.get(
       throw new HTTPException(500, { message: 'Failed to load image.' });
     }
     
+    // If we're serving a pre-existing WebP file (content negotiation), serve it directly
+    if (resImgFormat === 'webp' && origImgFormat === 'webp' && c.req.valid('query').width == null && c.req.valid('query').height == null) {
+      c.header('Content-Type', IMAGE_MIME_TYPE['webp']);
+      c.header('X-Cache', 'BYPASS');
+      c.header('Vary', 'Accept'); // Important for content negotiation
+      return c.body(createStreamBody(createReadStream(origFilePath)));
+    }
+    
     // キャッシュキーの生成
     const cacheKey = `${reqImgId}_${resImgFormat}_${c.req.valid('query').width ?? 'auto'}_${c.req.valid('query').height ?? 'auto'}`;
     
@@ -137,6 +161,9 @@ app.get(
     if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
       c.header('Content-Type', cached.mimeType);
       c.header('X-Cache', 'HIT');
+      if (resImgFormat === 'webp' && !c.req.valid('query').format) {
+        c.header('Vary', 'Accept');
+      }
       return c.body(cached.data);
     }
     
@@ -179,6 +206,9 @@ app.get(
     
     c.header('Content-Type', IMAGE_MIME_TYPE[resImgFormat]);
     c.header('X-Cache', 'MISS');
+    if (resImgFormat === 'webp' && !c.req.valid('query').format) {
+      c.header('Vary', 'Accept');
+    }
     return c.body(resBinary);
   },
 );
