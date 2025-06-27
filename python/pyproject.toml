@@ -1,0 +1,12 @@
+[project]
+name = "wsh-2024-image-optimizer"
+version = "0.1.0"
+description = "Image optimization tools for Web Speed Hackathon 2024"
+requires-python = ">=3.12"
+dependencies = [
+    "pillow>=10.0.0",
+    "pillow-avif-plugin>=1.4.0",
+    "numpy>=1.26.0",
+    "tqdm>=4.66.0",
+    "click>=8.1.0",
+]
