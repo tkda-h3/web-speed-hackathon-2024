@@ -247,7 +247,7 @@ importers:
     dependencies:
       drizzle-orm:
         specifier: 0.29.3
-        version: 0.29.3(@types/better-sqlite3@7.6.8)(@types/react@18.2.0)(better-sqlite3@9.3.0)(react@18.2.0)
+        version: 0.29.3(@types/better-sqlite3@7.6.8)(@types/react@18.2.0)(better-sqlite3@12.1.1)(react@18.2.0)
       drizzle-zod:
         specifier: 0.5.1
         version: 0.5.1(drizzle-orm@0.29.3)(zod@3.22.4)
@@ -291,11 +291,11 @@ importers:
         specifier: 2.4.3
         version: 2.4.3
       better-sqlite3:
-        specifier: 9.3.0
-        version: 9.3.0
+        specifier: 12.1.1
+        version: 12.1.1
       drizzle-orm:
         specifier: 0.29.3
-        version: 0.29.3(@types/better-sqlite3@7.6.8)(@types/react@18.2.0)(better-sqlite3@9.3.0)(react@18.2.0)
+        version: 0.29.3(@types/better-sqlite3@7.6.8)(@types/react@18.2.0)(better-sqlite3@12.1.1)(react@18.2.0)
       file-type:
         specifier: 19.0.0
         version: 19.0.0
@@ -4457,8 +4457,9 @@ packages:
     resolution: {integrity: sha512-V/Hy/X9Vt7f3BbPJEi8BdVFMByHi+jNXrYkW3huaybV/kQ0KJg0Y6PkEMbn+zeT+i+SiKZ/HMqJGIIt4LZDqNQ==}
     dev: false
 
-  /better-sqlite3@9.3.0:
-    resolution: {integrity: sha512-ww73jVpQhRRdS9uMr761ixlkl4bWoXi8hMQlBGhoN6vPNlUHpIsNmw4pKN6kjknlt/wopdvXHvLk1W75BI+n0Q==}
+  /better-sqlite3@12.1.1:
+    resolution: {integrity: sha512-xjl/TjWLy/6yLa5wkbQSjTgIgSiaEJy3XzjF5TAdiWaAsu/v0OCkYOc6tos+PkM/k4qURN2pFKTsbcG3gk29Uw==}
+    engines: {node: 20.x || 22.x || 23.x || 24.x}
     requiresBuild: true
     dependencies:
       bindings: 1.5.0
@@ -5067,7 +5068,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.29.3(@types/better-sqlite3@7.6.8)(@types/react@18.2.0)(better-sqlite3@9.3.0)(react@18.2.0):
+  /drizzle-orm@0.29.3(@types/better-sqlite3@7.6.8)(@types/react@18.2.0)(better-sqlite3@12.1.1)(react@18.2.0):
     resolution: {integrity: sha512-uSE027csliGSGYD0pqtM+SAQATMREb3eSM/U8s6r+Y0RFwTKwftnwwSkqx3oS65UBgqDOM0gMTl5UGNpt6lW0A==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -5140,7 +5141,7 @@ packages:
     dependencies:
       '@types/better-sqlite3': 7.6.8
       '@types/react': 18.2.0
-      better-sqlite3: 9.3.0
+      better-sqlite3: 12.1.1
       react: 18.2.0
     dev: false
 
@@ -5150,7 +5151,7 @@ packages:
       drizzle-orm: '>=0.23.13'
       zod: '*'
     dependencies:
-      drizzle-orm: 0.29.3(@types/better-sqlite3@7.6.8)(@types/react@18.2.0)(better-sqlite3@9.3.0)(react@18.2.0)
+      drizzle-orm: 0.29.3(@types/better-sqlite3@7.6.8)(@types/react@18.2.0)(better-sqlite3@12.1.1)(react@18.2.0)
       zod: 3.22.4
     dev: false
 

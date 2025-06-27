@@ -20,7 +20,7 @@
     "@wsh-2024/app": "workspace:*",
     "@wsh-2024/schema": "workspace:*",
     "bcryptjs": "2.4.3",
-    "better-sqlite3": "9.3.0",
+    "better-sqlite3": "12.1.1",
     "drizzle-orm": "0.29.3",
     "file-type": "19.0.0",
     "globby": "14.0.1",
