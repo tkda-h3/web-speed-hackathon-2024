@@ -10,7 +10,7 @@
     "lint:eslint": "eslint --ext mts,cts,ts,tsx,mjs,cjs,js,jsx .",
     "lint:prettier": "prettier --ignore-path .prettierignore --check '**/*.{mts,cts,ts,tsx,mjs,cjs,js,jsx,json}'",
     "lint:tsc": "tsc --noEmit",
-    "start": "volta run --node 20.11.1 pnpm --filter \"@wsh-2024/server\" run start",
+    "start": "pnpm --filter \"@wsh-2024/server\" run start",
     "test": "pnpm --filter \"@wsh-2024/testing\" run start",
     "test:debug": "pnpm --filter \"@wsh-2024/testing\" run start:debug"
   },
@@ -23,6 +23,10 @@
     "typescript": "5.4.2"
   },
   "packageManager": "pnpm@8.15.4",
+  "engines": {
+    "node": ">=20.11.1 <21",
+    "pnpm": ">=8.15.4"
+  },
   "volta": {
     "node": "20.11.1"
   }
