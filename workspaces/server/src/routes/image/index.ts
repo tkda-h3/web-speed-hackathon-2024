@@ -61,6 +61,34 @@ const IMAGE_CONVERTER: Record<SupportedImageExtension, ConverterInterface> = {
   ['webp']: webpConverter,
 };
 
+// メモリキャッシュ (LRUキャッシュ)
+interface CacheEntry {
+  data: Uint8Array;
+  mimeType: string;
+  timestamp: number;
+}
+
+const IMAGE_CACHE = new Map<string, CacheEntry>();
+const MAX_CACHE_SIZE = 100; // 最大100エントリ
+const CACHE_TTL = 60 * 60 * 1000; // 1時間
+
+// LRUキャッシュの整理
+function evictOldestEntry() {
+  let oldestKey: string | null = null;
+  let oldestTime = Date.now();
+  
+  for (const [key, entry] of IMAGE_CACHE.entries()) {
+    if (entry.timestamp < oldestTime) {
+      oldestTime = entry.timestamp;
+      oldestKey = key;
+    }
+  }
+  
+  if (oldestKey) {
+    IMAGE_CACHE.delete(oldestKey);
+  }
+}
+
 const app = new Hono();
 
 app.get(
@@ -100,9 +128,22 @@ app.get(
     if (!isSupportedImageFormat(origImgFormat)) {
       throw new HTTPException(500, { message: 'Failed to load image.' });
     }
+    
+    // キャッシュキーの生成
+    const cacheKey = `${reqImgId}_${resImgFormat}_${c.req.valid('query').width ?? 'auto'}_${c.req.valid('query').height ?? 'auto'}`;
+    
+    // キャッシュチェック
+    const cached = IMAGE_CACHE.get(cacheKey);
+    if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
+      c.header('Content-Type', cached.mimeType);
+      c.header('X-Cache', 'HIT');
+      return c.body(cached.data);
+    }
+    
     if (resImgFormat === origImgFormat && c.req.valid('query').width == null && c.req.valid('query').height == null) {
       // 画像変換せずにそのまま返す
       c.header('Content-Type', IMAGE_MIME_TYPE[resImgFormat]);
+      c.header('X-Cache', 'BYPASS');
       return c.body(createStreamBody(createReadStream(origFilePath)));
     }
 
@@ -125,7 +166,19 @@ app.get(
       width: manipulated.width,
     });
 
+    // キャッシュに保存
+    if (IMAGE_CACHE.size >= MAX_CACHE_SIZE) {
+      evictOldestEntry();
+    }
+    
+    IMAGE_CACHE.set(cacheKey, {
+      data: resBinary,
+      mimeType: IMAGE_MIME_TYPE[resImgFormat],
+      timestamp: Date.now()
+    });
+    
     c.header('Content-Type', IMAGE_MIME_TYPE[resImgFormat]);
+    c.header('X-Cache', 'MISS');
     return c.body(resBinary);
   },
 );

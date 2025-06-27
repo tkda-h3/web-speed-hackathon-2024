@@ -6,7 +6,7 @@
     "build:clean": "rm -rf ./dist",
     "build:copy": "cp -r ./seeds/images ./dist/images",
     "build:tsup": "tsup",
-    "start": "volta run --node 20.11.1 node ./dist/server.js"
+    "start": "node ./dist/server.js"
   },
   "dependencies": {
     "@hapi/accept": "6.0.3",
